@@ -15,4 +15,10 @@ public class ProdutoService
     {
         return _context.Produto.ToList();
     }
+
+    public void InseriProduto(Produto produto)
+    {
+        _context.Add(produto);
+        _context.SaveChanges();
+    }
 }

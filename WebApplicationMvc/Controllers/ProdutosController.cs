@@ -25,5 +25,16 @@ namespace WebApplicationMvc.Controllers
             var list = _produtoService.TodosProdutos();
             return View(list);
         }
+        public IActionResult Create()
+        {
+            return View();
+        }
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public IActionResult Create(Produto produto)
+        {
+            _produtoService.InseriProduto(produto);
+            return RedirectToAction(nameof(Index));
+        }
     }
 }

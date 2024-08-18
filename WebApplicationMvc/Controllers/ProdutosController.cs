@@ -7,21 +7,23 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using WebApplicationMvc.Data;
 using WebApplicationMvc.Models;
+using WebApplicationMvc.Services;
 
 namespace WebApplicationMvc.Controllers
 {
     public class ProdutosController : Controller
     {
-        private readonly WebApplicationMvcContext _context;
+        private readonly ProdutoService _produtoService;
 
-        public ProdutosController(WebApplicationMvcContext context)
+        public ProdutosController(ProdutoService produtoService)
         {
-            _context = context;
+            _produtoService = produtoService;
         }
 
-       public IActionResult Index()
+        public IActionResult Index()
         {
-            return View();
+            var list = _produtoService.TodosProdutos();
+            return View(list);
         }
     }
 }

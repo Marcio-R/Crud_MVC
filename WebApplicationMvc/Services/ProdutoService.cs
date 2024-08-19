@@ -12,37 +12,38 @@ public class ProdutoService
     {
         _context = context;
     }
-    public List<Produto> TodosProdutos()
+    public async Task<List<Produto>> TodosProdutos()
     {
-        return _context.Produto.ToList();
+        return await _context.Produto.ToListAsync();
     }
 
-    public void InseriProduto(Produto produto)
+    public async Task InseriProduto(Produto produto)
     {
         _context.Add(produto);
-        _context.SaveChanges();
+        await _context.SaveChangesAsync();
     }
 
-    public Produto BuscaId(int id)
+    public async Task<Produto> BuscaId(int id)
     {
-        return _context.Produto.FirstOrDefault(obj => obj.Id == id);
+        return await _context.Produto.FirstOrDefaultAsync(obj => obj.Id == id);
     }
-    public void Remove (int id)
+    public async Task Remove(int id)
     {
         var obj = _context.Produto.Find(id);
         _context.Produto.Remove(obj);
-        _context.SaveChanges();
+        await _context.SaveChangesAsync();
     }
-    public void Atualizar(Produto obj)
+    public async Task Atualizar(Produto obj)
     {
-        if(!_context.Produto.Any(x => x.Id == obj.Id))
+        bool existe = await _context.Produto.AnyAsync(x => x.Id == obj.Id);
+        if (!existe)
         {
             throw new Exception();
         }
         try
         {
             _context.Update(obj);
-            _context.SaveChanges();
+            await _context.SaveChangesAsync();
         }
         catch (DbUpdateConcurrencyException e)
         {
@@ -50,4 +51,5 @@ public class ProdutoService
             throw new Exception(e.Message);
         }
     }
+   
 }

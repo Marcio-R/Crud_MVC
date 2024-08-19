@@ -15,5 +15,6 @@ namespace WebApplicationMvc.Data
         }
 
         public DbSet<WebApplicationMvc.Models.Produto> Produto { get; set; } = default!;
+        public DbSet<WebApplicationMvc.Models.Usuario> Usuario { get; set; } = default!;
     }
 }

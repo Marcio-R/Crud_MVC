@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
@@ -11,6 +12,7 @@ using WebApplicationMvc.Services;
 
 namespace WebApplicationMvc.Controllers
 {
+
     public class ProdutosController : Controller
     {
         private readonly ProdutoService _produtoService;
@@ -20,34 +22,39 @@ namespace WebApplicationMvc.Controllers
             _produtoService = produtoService;
         }
 
-        public IActionResult Index()
+        [Authorize]
+        public async Task<IActionResult> Index()
         {
-            var list = _produtoService.TodosProdutos();
+            var list = await _produtoService.TodosProdutos();
             return View(list);
         }
-        public IActionResult Create()
+        [Authorize(Roles = "Master")]
+        public async Task<IActionResult> Create()
         {
             return View();
         }
+
         [HttpPost]
+        [Authorize(Roles = "Master")]
         [ValidateAntiForgeryToken]
-        public IActionResult Create(Produto produto)
+        public async Task<IActionResult> Create(Produto produto)
         {
             if (!ModelState.IsValid)
             {
                 return View(produto);
             }
-            _produtoService.InseriProduto(produto);
+            await _produtoService.InseriProduto(produto);
             return RedirectToAction(nameof(Index));
         }
-        public IActionResult Delete(int? id)
+        [Authorize(Roles = "Master")]
+        public async Task<IActionResult> Delete(int? id)
         {
             if (id == null)
             {
                 return NotFound();
 
             }
-            var obj = _produtoService.BuscaId(id.Value);
+            var obj = await _produtoService.BuscaId(id.Value);
             if (obj == null)
             {
                 return NotFound();
@@ -57,33 +64,36 @@ namespace WebApplicationMvc.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public IActionResult Delete(int id)
+        [Authorize(Roles = "Master")]
+        public async Task<IActionResult> Delete(int id)
         {
-            _produtoService.Remove(id);
+            await _produtoService.Remove(id);
             return RedirectToAction(nameof(Index));
         }
 
-        public IActionResult Details(int? id)
+        [Authorize(Roles = "Master")]
+        public async Task<IActionResult> Details(int? id)
         {
             if (id == null)
             {
                 return NotFound();
 
             }
-            var obj = _produtoService.BuscaId(id.Value);
+            var obj = await _produtoService.BuscaId(id.Value);
             if (obj == null)
             {
                 return NotFound();
             }
             return View(obj);
         }
-        public IActionResult Edit(int? id)
+        [Authorize(Roles = "Master")]
+        public async Task<IActionResult> Edit(int? id)
         {
             if (id == null)
             {
                 return NotFound();
             }
-            var obj = _produtoService.BuscaId(id.Value);
+            var obj = await _produtoService.BuscaId(id.Value);
             if (obj == null)
             {
                 return NotFound();
@@ -92,7 +102,8 @@ namespace WebApplicationMvc.Controllers
         }
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public IActionResult Edit(int id, Produto produto)
+        [Authorize(Roles = "Master")]
+        public async Task<IActionResult> Edit(int id, Produto produto)
         {
             if (!ModelState.IsValid)
             {
@@ -104,7 +115,7 @@ namespace WebApplicationMvc.Controllers
             }
             try
             {
-                _produtoService.Atualizar(produto);
+                await _produtoService.Atualizar(produto);
                 return RedirectToAction(nameof(Index));
 
             }
@@ -114,5 +125,7 @@ namespace WebApplicationMvc.Controllers
                 throw new Exception(e.Message);
             }
         }
+
+
     }
 }

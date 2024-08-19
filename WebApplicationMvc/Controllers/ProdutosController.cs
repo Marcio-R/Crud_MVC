@@ -73,5 +73,38 @@ namespace WebApplicationMvc.Controllers
             }
             return View(obj);
         }
+        public IActionResult Edit(int? id)
+        {
+            if (id == null)
+            {
+                return NotFound();
+            }
+            var obj = _produtoService.BuscaId(id.Value);
+            if (obj == null)
+            {
+                return NotFound();
+            }
+            return View(obj);
+        }
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public IActionResult Edit(int id, Produto produto)
+        {
+            if (id != produto.Id)
+            {
+                return BadRequest();
+            }
+            try
+            {
+                _produtoService.Atualizar(produto);
+                return RedirectToAction(nameof(Index));
+
+            }
+            catch (Exception e)
+            {
+
+                throw new Exception(e.Message);
+            }
+        }
     }
 }

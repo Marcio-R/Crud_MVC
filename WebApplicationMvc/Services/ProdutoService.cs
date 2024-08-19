@@ -1,4 +1,5 @@
-﻿using WebApplicationMvc.Data;
+﻿using Microsoft.EntityFrameworkCore;
+using WebApplicationMvc.Data;
 using WebApplicationMvc.Models;
 
 namespace WebApplicationMvc.Services;
@@ -31,5 +32,22 @@ public class ProdutoService
         var obj = _context.Produto.Find(id);
         _context.Produto.Remove(obj);
         _context.SaveChanges();
+    }
+    public void Atualizar(Produto obj)
+    {
+        if(!_context.Produto.Any(x => x.Id == obj.Id))
+        {
+            throw new Exception();
+        }
+        try
+        {
+            _context.Update(obj);
+            _context.SaveChanges();
+        }
+        catch (DbUpdateConcurrencyException e)
+        {
+
+            throw new Exception(e.Message);
+        }
     }
 }

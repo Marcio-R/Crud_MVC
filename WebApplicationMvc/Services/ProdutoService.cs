@@ -21,4 +21,15 @@ public class ProdutoService
         _context.Add(produto);
         _context.SaveChanges();
     }
+
+    public Produto BuscaId(int id)
+    {
+        return _context.Produto.FirstOrDefault(obj => obj.Id == id);
+    }
+    public void Remove (int id)
+    {
+        var obj = _context.Produto.Find(id);
+        _context.Produto.Remove(obj);
+        _context.SaveChanges();
+    }
 }

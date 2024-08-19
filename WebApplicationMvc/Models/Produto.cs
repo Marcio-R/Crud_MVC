@@ -17,6 +17,5 @@ public class Produto
     public string Descricao { get; set; }
 
     [Required(ErrorMessage = "A quantidade em estoque é obrigatória.")]
-    [Range(0, int.MaxValue, ErrorMessage = "A quantidade em estoque deve ser um valor positivo.")]
     public int QuantidadeEmEstoque { get; set; }
 }

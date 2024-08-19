@@ -33,6 +33,10 @@ namespace WebApplicationMvc.Controllers
         [ValidateAntiForgeryToken]
         public IActionResult Create(Produto produto)
         {
+            if (!ModelState.IsValid)
+            {
+                return View(produto);
+            }
             _produtoService.InseriProduto(produto);
             return RedirectToAction(nameof(Index));
         }
@@ -90,6 +94,10 @@ namespace WebApplicationMvc.Controllers
         [ValidateAntiForgeryToken]
         public IActionResult Edit(int id, Produto produto)
         {
+            if (!ModelState.IsValid)
+            {
+                return View(produto);
+            }
             if (id != produto.Id)
             {
                 return BadRequest();
